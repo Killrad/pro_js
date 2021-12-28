@@ -14,22 +14,22 @@
             <div class="form__item" style="width: 625px;">
                 <label for="formName" class="form__label">ФИО*:</label>
                 <input id="formName" type="text" name="name" class="form__input _req _name"
-                :value="summary.FIO">
+                :value="summary.FIO"/>
             </div>
             <div class="form__item" style="width: 625px;">
                 <label for="formURL" class="form__label">URL Фото:</label>
                 <input id="formURL" type="text" name="url" class="form__input _req _name"
-                :value="summary.url">
+                :value="summary.url" v-bind:class="{_error: errs.url}">
             </div>
             <div class="form__item">
                 <label for="formEmail" class="form__label">E-mail*:</label>
                 <input id="formEmail" type="text" name="email" class="form__input _req _email"
-                :value="summary.email">
+                :value="summary.email" v-bind:class="{_error: errs.email}">
             </div>
             <div class="form__item left">
                 <label for="formPhone" class="form__label">Телефон*:</label>
                 <input id="formPhone" type="text" name="phone" class="form__input _req _phone"
-                :value="summary.phone">
+                :value="summary.phone"  v-bind:class="{_error: errs.phone}">
             </div>
             <div class="form__item">
                 <label for="formBdate" class="form__label">Дата рождения:</label>
@@ -43,21 +43,47 @@
             </div>
             <div class="form__item">
                 <label for="formEdu" class="form__label" style="z-index:1;">Образование:</label>
-                <Chooser id="formEdu" @optionChanged="EduChanged" :value="summary.education" :items="items"/> 
+                <Chooser id="formEdu" @optionChanged="EduChanged" :value="summary.education" :items="obr1"/> 
             </div>
             
             <div class="form__item left">
                 <label for="formMessage" class="form__label">Ключевые навыки:</label>
                 <textarea id="formMessage" name="message" class="form__input" :value="summary.skills"></textarea>
             </div>
+            <div class="edu" v-if="isEdu()">
+                <div class="form__item" style="width: 625px;">
+                    <label for="formPay" class="form__label" style="margin-left:228px;">Учебное заведение</label>
+                    <input id="formPay" type="text" name="paytion" class="form__input"
+                    :value="summary.edu.name">
+                </div>
+
+                <div class="form__item" style="width: 200px;">
+                    <label for="formPay" class="form__label">Факультет:</label>
+                    <input id="formPay" type="text" name="paytion" class="form__input"
+                    :value="summary.edu.faculty">
+                </div>
+
+                <div class="form__item left" style="width: 200px; margin-left:225px;">
+                    <label for="formPay" class="form__label">Профиль:</label>
+                    <input id="formPay" type="text" name="paytion" class="form__input"
+                    :value="summary.edu.profile">
+                </div>
+
+                <div class="form__item left" style="width: 175px; margin-left: 450px">
+                    <label for="formPay" class="form__label">Год окончания:</label>
+                    <input id="formPay" type="text" name="paytion" class="form__input"
+                    :value="summary.edu.year">
+                </div>
+
+            </div>
             <div class="form__item" style="width:625px;">
                 <label for="formMessage" class="form__label" >О себе:</label>
                 <textarea id="formMessage" name="message" class="form__input" :value="summary.info"></textarea>
             </div>
             <div class="form__item">
-                <label id="error_label" class="form__label _hide _error">Ошибка:</label>
+                <label id="error_label" class="form__label _error" v-if="errs.total>0">Введены некоректные данные.</label>
             </div>
-            <button class="btns" @click="Result"> Отправить </button>
+            <button class="btns" @click="SummarySubmit"> Отправить </button>
     </form>
 </template>
 <script>
@@ -79,6 +105,12 @@ export default {
             {name:"Магистр", icon:undefined},
             {name:"Бакалавр", icon:undefined},
         ],
+        obr1:[
+            {name:"Среднее", icon:undefined},
+            {name:"Среднее специальное", icon:undefined},
+            {name:"Неоконченное высшее", icon:undefined},
+            {name:"Высшее", icon:undefined}
+        ],
         summary:{
             profession: '',
             city:'',
@@ -88,20 +120,59 @@ export default {
             email:'',
             bdate:'',
             education:'',
+            edu:{
+                name:'',
+                faculty:'',
+                profile:'',
+                year:''
+            },
             paytion:'',
             skills:'',
             info:''
+        },
+        errs: {
+            email: 0,
+            phone:0,
+            url: 0,
+            total:0
         }
       }
   },
   methods:{
       EduChanged(opt){
           this.summary.education = opt;
+      },
+      SummarySubmit(){
+        this.validate();
+        if (this.errs.total == 0){
+            /*Сохранение данных */
+        }
+      },
+      isEdu(){
+          return (this.summary.education != 'Среднее' && 
+                this.summary.education != '');
+      },
+      validate(){
+        this.errs.email=0;
+        if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,8})+$/.test(this.summary.email)) this.errs.email=1; /*Валидация почты*/
+        this.errs.phone=0;
+        if (!/^[0-9]{13}$/.test(this.summary.phone)) this.errs.phone=1; /*Валидация телефона */
+        this.errs.url=0;
+        if (!/^http[s]?:\/\/[a-z0-9]*/.test(this.summary.url)) this.errs.url=1; /*Валидация URL ссылки */
+        this.errs.total = this.errs.url+this.errs.email+this.errs.phone;
       }
   }
 }
 </script>
 <style>
+.edu{
+    border: 3px solid #cacaca;
+    border-radius: 20px;
+    margin-left: -2px;
+    padding-left: 2px;
+    height: 200px;
+    width: 635px;
+}
 .form{
     max-width: 625px;
     margin: 0 auto;
