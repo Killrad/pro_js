@@ -57,7 +57,7 @@
             <div class="form__item">
                 <label id="error_label" class="form__label _hide _error">Ошибка:</label>
             </div>
-        <chooser style="display:none;"/>
+            <button class="btn" @click="Result"> Отправить </button>
     </form>
 </template>
 <script>
@@ -154,7 +154,7 @@ h1{
     transition: all 0.5s ease 0s;
 }
 .form__input:focus{
-     box-shadow: 0 0 15px #62baea;
+     box-shadow: 0 0 20px #62baea;
 }
 .form__input._error{
     box-shadow: 0 0 15px red;
@@ -196,5 +196,22 @@ input{
     outline: none;
     padding: 12px 20px;
     border-radius: 10px;
+}
+.btn{
+    margin-left: 150px;
+    position: absolute;
+    font-size: 18px;
+    width: 300px;
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    border:none;
+    outline: none;
+    padding: 12px 20px;
+    border-radius: 10px; 
+    z-index: 0;
+}
+.btn:hover{
+    background: #62baea;
+    color: #fff;
 }
 </style>
