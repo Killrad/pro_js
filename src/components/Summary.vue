@@ -57,7 +57,7 @@
             <div class="form__item">
                 <label id="error_label" class="form__label _hide _error">Ошибка:</label>
             </div>
-            <button class="btn" @click="Result"> Отправить </button>
+            <button class="btns" @click="Result"> Отправить </button>
     </form>
 </template>
 <script>
@@ -197,7 +197,7 @@ input{
     padding: 12px 20px;
     border-radius: 10px;
 }
-.btn{
+.btns{
     margin-left: 150px;
     position: absolute;
     font-size: 18px;
@@ -210,7 +210,7 @@ input{
     border-radius: 10px; 
     z-index: 0;
 }
-.btn:hover{
+.btns:hover{
     background: #62baea;
     color: #fff;
 }
