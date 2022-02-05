@@ -17,16 +17,11 @@
       </ul>
     </div>
   </div>
-  <Converter id="Converter"  v-bind:class="{hidden: isHidden(0)}"/>
-  <Summary id="Summary" v-bind:class="{hidden: isHidden(1)}"/>
+  <router-view />
 </template>
 <script>
-import Converter from './components/Converter.vue';
-import Summary from './components/Summary.vue';
+
 export default {
-  components:{
-    Converter, Summary
-  },
   data() {
     return {
       menuItems : [
@@ -42,6 +37,12 @@ export default {
       this.menuItems.forEach(it =>
         it.isActive = false);
       this.menuItems[index].isActive = true;
+      if (this.menuItems[index].id == 1){
+        this.$router.push('/');
+      }
+      else{
+        this.$router.push('/' + this.menuItems[index].name.toLowerCase());
+      }
     },
     isHidden(id){
       return !this.menuItems[id].isActive;
