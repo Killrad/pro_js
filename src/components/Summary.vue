@@ -9,12 +9,19 @@
             <div class="form__item left">
                 <label for="formCity" class="form__label">Город:</label>
                 <input id="formCity" type="text" name="city" class="form__input _req _name"
-                :value="summary.city">
+                :value="summary.city" list="Cities" @change="CityChange">
+                <datalist id="Cities">
+                    <option v-for="city in cities" :value="city.title" :key="city.id"/>
+                </datalist>
             </div>
-            <div class="form__item" style="width: 625px;">
+            <div class="form__item" style="width: 450px;">
                 <label for="formName" class="form__label">ФИО*:</label>
                 <input id="formName" type="text" name="name" class="form__input _req _name"
                 :value="summary.FIO"/>
+            </div>
+            <div class="form__item left" style="margin-left:480px;">
+                <label for="formStatus" class="form__label" style="z-index:1;">Статус:</label>
+                <Chooser id="formStatus" @optionChanged="StatusChanged" :value="summary.status" :items="varStatus" style="width:145px"/> 
             </div>
             <div class="form__item" style="width: 625px;">
                 <label for="formURL" class="form__label">URL Фото:</label>
@@ -45,37 +52,45 @@
                 <label for="formEdu" class="form__label" style="z-index:1;">Образование:</label>
                 <Chooser id="formEdu" @optionChanged="EduChanged" :value="summary.education" :items="obr1"/> 
             </div>
-            
+            <button class="btns" type="button" style="margin-left:0px;" @click="AddNewYear" v-if="isEdu()"> Ещё образование </button>
             <div class="form__item left">
                 <label for="formMessage" class="form__label">Ключевые навыки:</label>
                 <textarea id="formMessage" name="message" class="form__input" :value="summary.skills"></textarea>
             </div>
-            <div class="edu" v-if="isEdu()">
-                <div class="form__item" style="width: 625px;">
-                    <label for="formPay" class="form__label" style="margin-left:228px;">Учебное заведение</label>
-                    <input id="formPay" type="text" name="paytion" class="form__input"
-                    :value="summary.edu.name">
-                </div>
+            <div class="eduall" v-if="isEdu()">
+                <div class="edu" v-for="ed in summary.edu" :key="ed.index">
+                    <div class="del" v-if="ismanyEdu()">
+                        <button type="button" style="visibility:hidden; position:absolute; width:20px; height:20px;" @click="deleteEdu(ed.index)"/>
+                        <ion-icon name="close-circle-outline" @click="deleteEdu(ed.index)"></ion-icon>
+                    </div>
+                    <div class="form__item" style="width: 625px;">
+                        <label for="formPay" class="form__label" style="margin-left:228px;">Учебное заведение</label>
+                        <input id="formPay" type="text" name="paytion" class="form__input"
+                        :value="ed.name" list="Unics">
+                    </div>
 
-                <div class="form__item" style="width: 200px;">
-                    <label for="formPay" class="form__label">Факультет:</label>
-                    <input id="formPay" type="text" name="paytion" class="form__input"
-                    :value="summary.edu.faculty">
-                </div>
+                    <div class="form__item" style="width: 200px;">
+                        <label for="formPay" class="form__label">Факультет:</label>
+                        <input id="formPay" type="text" name="paytion" class="form__input"
+                        :value="ed.faculty">
+                    </div>
 
-                <div class="form__item left" style="width: 200px; margin-left:225px;">
-                    <label for="formPay" class="form__label">Профиль:</label>
-                    <input id="formPay" type="text" name="paytion" class="form__input"
-                    :value="summary.edu.profile">
-                </div>
+                    <div class="form__item left" style="width: 200px; margin-left:225px;">
+                        <label for="formPay" class="form__label">Профиль:</label>
+                        <input id="formPay" type="text" name="paytion" class="form__input"
+                        :value="ed.profile">
+                    </div>
 
-                <div class="form__item left" style="width: 175px; margin-left: 450px">
-                    <label for="formPay" class="form__label">Год окончания:</label>
-                    <input id="formPay" type="text" name="paytion" class="form__input"
-                    :value="summary.edu.year">
+                    <div class="form__item left" style="width: 175px; margin-left: 450px">
+                        <label for="formPay" class="form__label">Год окончания:</label>
+                        <input id="formPay" type="text" name="paytion" class="form__input"
+                        :value="ed.year">
+                    </div>
                 </div>
-
             </div>
+            <datalist id="Unics">
+                    <option v-for="un in unic" :value="un.title" :key="un.id"/>
+            </datalist>
             <div class="form__item" style="width:625px;">
                 <label for="formMessage" class="form__label" >О себе:</label>
                 <textarea id="formMessage" name="message" class="form__input" :value="summary.info"></textarea>
@@ -83,17 +98,27 @@
             <div class="form__item">
                 <label id="error_label" class="form__label _error" v-if="errs.total>0">Введены некоректные данные.</label>
             </div>
-            <button class="btns" @click="SummarySubmit"> Отправить </button>
+            <button class="btns" type="button" @click="SummarySubmit"> Отправить </button>
     </form>
 </template>
 <script>
 import Chooser from './UIelems/Chooser.vue';
+import vkApi from '../assets/VK_Api.json';
+import fetchJsonp from "fetch-jsonp";
 export default {
     components:{
     Chooser
   },
   data(){
       return{
+          cities:[
+                {title:"Липецк", id:1},
+                {title:"Воркута", id:2},
+                {title:"Белгород", id:3}
+          ],
+          unic:[
+            {title:"ЛГТУ", id:1}
+          ],
         items:[
             {name:"Доктор наук", icon:undefined},
             {name:"Кандидат наук", icon:undefined},
@@ -111,7 +136,14 @@ export default {
             {name:"Неоконченное высшее", icon:undefined},
             {name:"Высшее", icon:undefined}
         ],
+        varStatus:[
+            {name:"Новый", icon:undefined},
+            {name:"Назначено собеседование", icon:undefined},
+            {name:"Принят", icon:undefined},
+            {name:"Отказ", icon:undefined},
+        ],
         summary:{
+            status:'Новый',
             profession: '',
             city:'',
             FIO:'',
@@ -120,12 +152,9 @@ export default {
             email:'',
             bdate:'',
             education:'',
-            edu:{
-                name:'',
-                faculty:'',
-                profile:'',
-                year:''
-            },
+            edu:[
+                {index:1, name:'', faculty:'', profile:'', year:''},
+                ],
             paytion:'',
             skills:'',
             info:''
@@ -138,12 +167,84 @@ export default {
         }
       }
   },
+  mounted(){
+      this.getCities();
+  },
   methods:{
+      ismanyEdu(){
+          return (this.summary.edu.length > 1);
+      },
+      deleteEdu(index){
+          console.log(index);
+          let new_edu = [];
+          this.summary.edu.forEach(x =>{
+              if (x.index != index) new_edu.push(x)
+          })
+          this.summary.edu = new_edu;
+      },
+      async getCities(){
+          let response = await fetchJsonp("https://api.vk.com/method/database.getCities?country_id=1&count=100&access_token="+vkApi.token+"&v=5.131")
+          .then(function (response) {
+                return response.json();
+            })
+            .then(function (json) {
+                console.log("parsed json", json);
+                return json.response.items;
+            })
+            .catch(function (ex) {
+                console.log("parsing failed", ex);
+            });
+            this.cities = response;
+      },
+      async getUnic(city){
+          let url = '';
+          if (city != ''){
+            let id = -1;
+            this.cities.forEach(it =>{
+                if (it.title == city) id = it.id;
+            });
+          
+            url = "https://api.vk.com/method/database.getUniversities?country_id=1&city_id="+id+"&count=100&access_token="+vkApi.token+"&v=5.131";
+          }
+          this.summary.city = city;
+          this.unic = await fetchJsonp(url)
+          .then(function (response) {
+                return response.json();
+            })
+            .then(function (json) {
+                console.log("parsed json", json);
+                return json.response.items;
+                
+            })
+            .catch(function (ex) {
+                console.log("parsing failed", ex);
+            });
+            //this.unic = response;
+      },
+      AddNewYear(){
+          let cnt_edu = 0;
+          this.summary.edu.forEach(x =>{
+              if (x.index > cnt_edu) cnt_edu = x.index
+          })
+          let new_edu = {
+              index:cnt_edu+1, name:'', faculty:'', profile:'', year:''
+          };
+          this.summary.edu.push(new_edu);
+      },
+      async CityChange(e){
+        let city = e.target.value;
+        console.log(city);
+        await this.getUnic(city);
+      },
+      StatusChanged(opt){
+        this.summary.status = opt;
+      },
       EduChanged(opt){
           this.summary.education = opt;
       },
       SummarySubmit(){
         this.validate();
+        console.log(this.summary.city);
         if (this.errs.total == 0){
             /*Сохранение данных */
         }
@@ -215,7 +316,14 @@ h1{
     display: none;
     transition: all 0.5s ease 0s;
 }
-
+.del{
+    color: rgb(255, 0, 0);
+    position: absolute;
+    margin-top: 2px;
+    margin-left: 590px;
+    font-size: 22px;
+    z-index: 10;
+}
 .form__input{
     height: 50px;
     padding: 0 20px;

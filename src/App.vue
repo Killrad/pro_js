@@ -32,6 +32,8 @@ export default {
   },
   created(){
   },
+  mounted() {
+  },
   methods: {
     menu_select(index){
       this.menuItems.forEach(it =>
