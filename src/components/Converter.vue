@@ -7,7 +7,7 @@
 		<label id="result">{{result}}</label>
 		<Chooser :key="left_selected" class="selectors" @optionChanged="lch" :items="options" v-bind:value="value(left_selected)" />
 		<Chooser :key="right_selected" class="selectors Rselector" @optionChanged="rch" v-bind:items="right_option" v-bind:value="value(right_selected)" />
-        <button class="btn" @click="Result"> Convert </button>
+        <button type="button" class="btn" @click="Result"> Convert </button>
 	</div>
     </div>
 </template>

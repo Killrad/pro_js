@@ -1,61 +1,53 @@
 <template>
-    <form id="Summary_form">
+    <div id="Summary_form">
         <h1 class="form__title">Форма для подачи резюме</h1>
             <div class="form__item">
-                <label for="formProf" class="form__label">Профессия:</label>
-                <input id="formProf" type="text" name="prof" class="form__input _req _name" 
-                :value="summary.profession">
+                <label class="form__label">Профессия:</label>
+                <input type="text" class="form__input" :value="summary.profession">
             </div>
             <div class="form__item left">
-                <label for="formCity" class="form__label">Город:</label>
-                <input id="formCity" type="text" name="city" class="form__input _req _name"
-                :value="summary.city" list="Cities" @change="CityChange">
+                <label class="form__label">Город:</label>
+                <input type="text" class="form__input" :value="summary.city" list="Cities" @change="CityChange">
                 <datalist id="Cities">
                     <option v-for="city in cities" :value="city.title" :key="city.id"/>
                 </datalist>
             </div>
             <div class="form__item" style="width: 450px;">
-                <label for="formName" class="form__label">ФИО*:</label>
-                <input id="formName" type="text" name="name" class="form__input _req _name"
-                :value="summary.FIO"/>
+                <label class="form__label">ФИО*:</label>
+                <input type="text" class="form__input" :value="summary.FIO"/>
             </div>
             <div class="form__item left" style="margin-left:480px;">
-                <label for="formStatus" class="form__label" style="z-index:1;">Статус:</label>
-                <Chooser id="formStatus" @optionChanged="StatusChanged" :value="summary.status" :items="varStatus" style="width:145px"/> 
+                <label class="form__label" style="z-index:1;">Статус:</label>
+                <Chooser @optionChanged="StatusChanged" :value="summary.status" :items="varStatus" style="width:145px"/> 
             </div>
             <div class="form__item" style="width: 625px;">
-                <label for="formURL" class="form__label">URL Фото:</label>
-                <input id="formURL" type="text" name="url" class="form__input _req _name"
-                :value="summary.url" v-bind:class="{_error: errs.url}">
+                <label class="form__label">URL Фото:</label>
+                <input type="text" class="form__input" :value="summary.url" v-bind:class="{_error: errs.url}">
             </div>
             <div class="form__item">
-                <label for="formEmail" class="form__label">E-mail*:</label>
-                <input id="formEmail" type="text" name="email" class="form__input _req _email"
-                :value="summary.email" v-bind:class="{_error: errs.email}">
+                <label class="form__label">E-mail*:</label>
+                <input type="text" class="form__input" :value="summary.email" v-bind:class="{_error: errs.email}">
             </div>
             <div class="form__item left">
-                <label for="formPhone" class="form__label">Телефон*:</label>
-                <input id="formPhone" type="text" name="phone" class="form__input _req _phone"
-                :value="summary.phone"  v-bind:class="{_error: errs.phone}">
+                <label class="form__label">Телефон*:</label>
+                <input type="text" class="form__input" :value="summary.phone"  v-bind:class="{_error: errs.phone}">
             </div>
             <div class="form__item">
-                <label for="formBdate" class="form__label">Дата рождения:</label>
-                <input id="formBdate" type="text" name="bdate" class="form__input _req _phone"
-                :value="summary.bdate">
+                <label class="form__label">Дата рождения:</label>
+                <input type="text" class="form__input" :value="summary.bdate">
             </div>
             <div class="form__item left">
-                <label for="formPay" class="form__label">Желаемая Зарплата:</label>
-                <input id="formPay" type="text" name="paytion" class="form__input _req _phone"
-                :value="summary.paytion">
+                <label class="form__label">Желаемая Зарплата:</label>
+                <input type="text" class="form__input" :value="summary.paytion">
             </div>
             <div class="form__item">
-                <label for="formEdu" class="form__label" style="z-index:1;">Образование:</label>
-                <Chooser id="formEdu" @optionChanged="EduChanged" :value="summary.education" :items="obr1"/> 
+                <label class="form__label" style="z-index:1;">Образование:</label>
+                <Chooser @optionChanged="EduChanged" :value="summary.education" :items="obr1"/> 
             </div>
             <button class="btns" type="button" style="margin-left:0px;" @click="AddNewYear" v-if="isEdu()"> Ещё образование </button>
             <div class="form__item left">
-                <label for="formMessage" class="form__label">Ключевые навыки:</label>
-                <textarea id="formMessage" name="message" class="form__input" :value="summary.skills"></textarea>
+                <label class="form__label">Ключевые навыки:</label>
+                <textarea class="form__input" :value="summary.skills"></textarea>
             </div>
             <div class="eduall" v-if="isEdu()">
                 <div class="edu" v-for="ed in summary.edu" :key="ed.index">
@@ -64,27 +56,23 @@
                         <ion-icon name="close-circle-outline" @click="deleteEdu(ed.index)"></ion-icon>
                     </div>
                     <div class="form__item" style="width: 625px;">
-                        <label for="formPay" class="form__label" style="margin-left:228px;">Учебное заведение</label>
-                        <input id="formPay" type="text" name="paytion" class="form__input"
-                        :value="ed.name" list="Unics">
+                        <label  class="form__label" style="margin-left:228px;">Учебное заведение</label>
+                        <input type="text" name="paytion" class="form__input" :value="ed.name" list="Unics">
                     </div>
 
                     <div class="form__item" style="width: 200px;">
-                        <label for="formPay" class="form__label">Факультет:</label>
-                        <input id="formPay" type="text" name="paytion" class="form__input"
-                        :value="ed.faculty">
+                        <label  class="form__label">Факультет:</label>
+                        <input type="text" name="paytion" class="form__input" :value="ed.faculty">
                     </div>
 
                     <div class="form__item left" style="width: 200px; margin-left:225px;">
-                        <label for="formPay" class="form__label">Профиль:</label>
-                        <input id="formPay" type="text" name="paytion" class="form__input"
-                        :value="ed.profile">
+                        <label  class="form__label">Профиль:</label>
+                        <input  type="text" name="paytion" class="form__input" :value="ed.profile">
                     </div>
 
                     <div class="form__item left" style="width: 175px; margin-left: 450px">
-                        <label for="formPay" class="form__label">Год окончания:</label>
-                        <input id="formPay" type="text" name="paytion" class="form__input"
-                        :value="ed.year">
+                        <label class="form__label">Год окончания:</label>
+                        <input type="text" name="paytion" class="form__input" :value="ed.year">
                     </div>
                 </div>
             </div>
@@ -92,32 +80,32 @@
                     <option v-for="un in unic" :value="un.title" :key="un.id"/>
             </datalist>
             <div class="form__item" style="width:625px;">
-                <label for="formMessage" class="form__label" >О себе:</label>
-                <textarea id="formMessage" name="message" class="form__input" :value="summary.info"></textarea>
+                <label class="form__label" >О себе:</label>
+                <textarea class="form__input" :value="summary.info"></textarea>
             </div>
             <div class="form__item">
-                <label id="error_label" class="form__label _error" v-if="errs.total>0">Введены некоректные данные.</label>
+                <label class="form__label _error" v-if="errs.total>0">Введены некоректные данные.</label>
             </div>
             <button class="btns" type="button" @click="SummarySubmit"> Отправить </button>
-    </form>
+    </div>
 </template>
 <script>
 import Chooser from './UIelems/Chooser.vue';
 import vkApi from '../assets/VK_Api.json';
 import fetchJsonp from "fetch-jsonp";
+import request from './req';
 export default {
     components:{
     Chooser
   },
   data(){
       return{
-          cities:[
+        cities:[
                 {title:"Липецк", id:1},
                 {title:"Воркута", id:2},
                 {title:"Белгород", id:3}
-          ],
-          unic:[
-            {title:"ЛГТУ", id:1}
+        ],
+        unic:[
           ],
         items:[
             {name:"Доктор наук", icon:undefined},
@@ -143,6 +131,7 @@ export default {
             {name:"Отказ", icon:undefined},
         ],
         summary:{
+            id:0,
             status:'Новый',
             profession: '',
             city:'',
@@ -153,7 +142,7 @@ export default {
             bdate:'',
             education:'',
             edu:[
-                {index:1, name:'', faculty:'', profile:'', year:''},
+                {index:1, name:'', faculty:'', profile:'', year:''}
                 ],
             paytion:'',
             skills:'',
@@ -167,12 +156,30 @@ export default {
         }
       }
   },
-  mounted(){
-      this.getCities();
+  async mounted(){
+      await this.getCities();
+
+      if(this.$router.params.id != undefined){
+          let id = this.$router.params.id
+          const response = await response('http://localhost:5000/api/cv/'+id);
+            const sum = await response.json();
+            this.summary.FIO = sum.name;
+            this.summary.url = sum.foto;
+            this.summary.city = sum.city;
+            this.summary.profession = sum.profession;
+            this.summary.status = sum.status;
+            this.summary.phone = sum.phone;
+            this.summary.email = sum.email;
+            this.summary.skills = sum.skills;
+            this.summary.info = sum.info;
+            this.summary.bdate = sum.bdate;
+            this.summary.education = sum.education;
+            this.id = id;
+      }
   },
   methods:{
       ismanyEdu(){
-          return (this.summary.edu.length > 1);
+          return (this.summary.edu.length>1);
       },
       deleteEdu(index){
           console.log(index);
@@ -244,9 +251,28 @@ export default {
       },
       SummarySubmit(){
         this.validate();
-        console.log(this.summary.city);
-        if (this.errs.total == 0){
-            /*Сохранение данных */
+        if (this.errs == 0){
+            const sum = this.summary
+            let data = {
+                id:sum.id,
+                name:sum.FIO,
+                city: sum.city, 
+                profession:sum.profession, 
+                foto:sum.url,
+                email:sum.email, 
+                phone:sum.phone, 
+                bdate:sum.bdate, 
+                edu:sum.education, 
+                skills:sum.skills, 
+                pay:sum.paytion, 
+                info:sum.info, 
+                status:sum.status
+            }
+            if (sum.id == 0){
+            request('http://localhost:5000/api/cv/add','POST',data);}
+            else{
+               request('http://localhost:5000/api/cv/edit/'+sum.id,'PUT',data); 
+            }
         }
       },
       isEdu(){

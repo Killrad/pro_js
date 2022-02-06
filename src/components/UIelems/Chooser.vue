@@ -3,7 +3,7 @@
         <input text="text" class="textBox" v-bind:value="value"
         placeholder="Выберите:" readonly>
         <div class="option">
-            <div v-for="item in items"  @click="show(item.name)" :key="item.name"> 
+            <div v-for="item in items" @click="show(item.name)" :key="item.name"> 
               <ion-icon v-if="item.icon != undefined" :name="item.icon"></ion-icon>
                 {{item.name}} </div>
         </div>

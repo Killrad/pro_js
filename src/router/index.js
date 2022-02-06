@@ -1,7 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Converter from "@/components/Converter";
 import Summary from "@/components/Summary";
-
+import All from "@/components/AllSummary"
 const routes = [
   {
     path: "/",
@@ -12,6 +12,11 @@ const routes = [
     path: "/summary",
     name: "Summary",
     component: Summary,
+  },
+  {
+    path: "/all",
+    name: "AllSummary",
+    component: All,
   },
 ];
 

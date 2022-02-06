@@ -15,7 +15,7 @@
     background: var(--clr);
   }
 .navigation{
-  width: 200px;
+  width: 290px;
   height: 70px;
   background: #fff;
   position:relative;
@@ -26,7 +26,7 @@
 }
 .navigation ul{
   display: flex;
-  width: 140px;
+  width: 210px;
 }
 .navigation ul li{
     position: relative;
@@ -112,4 +112,7 @@
 }
 .navigation ul li:nth-child(2).active ~ .indicator {
   transform: translateX(calc(70px*1));
+}
+.navigation ul li:nth-child(3).active ~ .indicator {
+  transform: translateX(calc(70px*2));
 }

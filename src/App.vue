@@ -26,7 +26,8 @@ export default {
     return {
       menuItems : [
         {id:1, name: "Converter", icon: "calculator-outline", isActive: true },
-        {id:2, name: "Summary", icon: "create-outline", isActive: false}
+        {id:2, name: "Summary", icon: "create-outline", isActive: false},
+        {id:3, name: "All", icon:"albums-outline" ,isActive: false}
       ]
     }
   },
@@ -59,6 +60,7 @@ export default {
   position: absolute;
   top:60px;
   right:20px;
+  width: 290px;
 }
 .hidden{
   visibility:hidden; 
