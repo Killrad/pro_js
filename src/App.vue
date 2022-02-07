@@ -2,7 +2,8 @@
 <div class="menu">
     <div class="navigation">
       <ul>
-        <li @click="menu_select(index)" class="list" v-bind:class="{active: mItem.isActive }" v-for="(mItem, index) in menuItems" :key="mItem.id">
+        <router-link :to="mItem.link"  v-for="(mItem) in menuItems" :key="mItem.id">
+        <li class="list">
           <a href="#">
             <span class="icon">
               <ion-icon :name="mItem.icon"></ion-icon>
@@ -12,6 +13,7 @@
             </span>
           </a>
         </li>
+        </router-link>
         <div class="indicator">
         </div>
       </ul>
@@ -20,49 +22,46 @@
   <router-view />
 </template>
 <script>
-
 export default {
   data() {
     return {
-      menuItems : [
-        {id:1, name: "Converter", icon: "calculator-outline", isActive: true },
-        {id:2, name: "Summary", icon: "create-outline", isActive: false},
-        {id:3, name: "All", icon:"albums-outline" ,isActive: false}
-      ]
-    }
-  },
-  created(){
-  },
-  mounted() {
+      menuItems: [
+        {
+          id: 1,
+          name: "Converter",
+          link: "/",
+          icon: "calculator-outline",
+        },
+        {
+          id: 2,
+          name: "Summary",
+          link: "/summary",
+          icon: "create-outline",
+        },
+        {
+          id: 3,
+          name: "All Summary",
+          link: "/all",
+          icon: "albums-outline",
+        },
+      ],
+    };
   },
   methods: {
-    menu_select(index){
-      this.menuItems.forEach(it =>
-        it.isActive = false);
-      this.menuItems[index].isActive = true;
-      if (this.menuItems[index].id == 1){
-        this.$router.push('/');
-      }
-      else{
-        this.$router.push('/' + this.menuItems[index].name.toLowerCase());
-      }
-    },
-    isHidden(id){
+    isHidden(id) {
       return !this.menuItems[id].isActive;
-    }
+    },
   },
-}
-
+};
 </script>
 <style scope>
-
-.menu{
+.menu {
   position: absolute;
-  top:60px;
-  right:20px;
+  top: 60px;
+  right: 20px;
   width: 290px;
 }
-.hidden{
-  visibility:hidden; 
+.hidden {
+  visibility: hidden;
 }
 </style>

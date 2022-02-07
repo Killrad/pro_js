@@ -4,25 +4,27 @@
 async function request(url, method = 'GET', data = null){
     try{
         console.log('before send request')
-        const headers = {}
+        // const headers = {}
         let body
         if (data) {
-            headers['Content-Type'] = 'application/json'
             body = JSON.stringify(data)
             
         }
+        // headers['Content-Type'] = 'aplication/json'
         console.log('send request')
         const response = await fetch (url,{
-            mode: 'no-cors',
+            mode: 'cors',
             method,
-            headers,
+            headers: { "Content-Type": "application/json" },
             body
         })
+        console.log('after request')
         /*const response = await fetchJsonp(url,{
             method,
             headers,
             body
         });*/
+        console.log(response)
         return await response.json();
     }   
     catch(e){

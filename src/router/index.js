@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from "vue-router";
+import { createWebHashHistory, createRouter } from "vue-router";
 import Converter from "@/components/Converter";
 import Summary from "@/components/Summary";
 import All from "@/components/AllSummary"
@@ -14,6 +14,11 @@ const routes = [
     component: Summary,
   },
   {
+    path: "/summary/:id",
+    name: "Summary/add",
+    component: Summary,
+  },
+  {
     path: "/all",
     name: "AllSummary",
     component: All,
@@ -21,7 +26,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 

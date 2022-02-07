@@ -1,13 +1,11 @@
 <template>
     <div class="lister">
-        <div class="element" v-for="s in summarys" :key="s.id">
+        <div class="element" v-for="s in summarys" :key="s._id">
             <div class="delete">
-                <button type="button" style="visibility:hidden; position:absolute; width:20px; height:20px;" @click="del(s.id)"/>
-                <ion-icon name="trash-sharp" @click="del(s.id)"></ion-icon>
+                <ion-icon name="trash-sharp" @click="del(s._id)"></ion-icon>
             </div>
             <div class="edit">
-                <button type="button" style="visibility:hidden; position:absolute; width:20px; height:20px;" @click="edti(s.id)"/>
-                <ion-icon name="pencil-sharp" @click="edit(s.id)"></ion-icon>
+                <ion-icon name="pencil-sharp" @click="edit(s._id)"></ion-icon>
             </div>
             <div class="el" style="width:400px;">
                 <label class="form__label">ФИО: {{s.name}}</label>
@@ -19,7 +17,7 @@
                 <label class="form__label">Статус: {{s.status}}</label>
             </div>
             <div class="el2" style="width:200px; margin-left:170px;">
-                <label class="form__label">Профессия: {{s.prof}}</label>
+                <label class="form__label">Профессия: {{s.profession}}</label>
             </div>
             <div class="el2" style="width:300px; margin-left:400px;">
                 <label class="form__label">Образование: {{s.edu}}</label>
@@ -40,12 +38,14 @@ export default {
     },
     async mounted() {
         const ans = await request('http://localhost:5000/api/cv')
+        console.log(ans);
         this.summarys = ans;
     },
     methods:{
         
         edit(id){
-            this.$router.push({name:'Summary', params:id});
+            console.log(id);
+            this.$router.push({name:'Summary/add', params:{id:id}});
         },
         async del(id){
             const ans = await request('http://localhost:5000/api/delete/'+id, 'DELETE');

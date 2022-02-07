@@ -3,18 +3,18 @@
         <h1 class="form__title">Форма для подачи резюме</h1>
             <div class="form__item">
                 <label class="form__label">Профессия:</label>
-                <input type="text" class="form__input" :value="summary.profession">
+                <input type="text" class="form__input" v-model="summary.profession">
             </div>
             <div class="form__item left">
                 <label class="form__label">Город:</label>
-                <input type="text" class="form__input" :value="summary.city" list="Cities" @change="CityChange">
+                <input type="text" class="form__input" v-model="summary.city" list="Cities" @change="CityChange">
                 <datalist id="Cities">
                     <option v-for="city in cities" :value="city.title" :key="city.id"/>
                 </datalist>
             </div>
             <div class="form__item" style="width: 450px;">
                 <label class="form__label">ФИО*:</label>
-                <input type="text" class="form__input" :value="summary.FIO"/>
+                <input type="text" class="form__input" v-model="summary.FIO"/>
             </div>
             <div class="form__item left" style="margin-left:480px;">
                 <label class="form__label" style="z-index:1;">Статус:</label>
@@ -22,23 +22,23 @@
             </div>
             <div class="form__item" style="width: 625px;">
                 <label class="form__label">URL Фото:</label>
-                <input type="text" class="form__input" :value="summary.url" v-bind:class="{_error: errs.url}">
+                <input type="text" class="form__input" v-model="summary.url" v-bind:class="{_error: errs.url}">
             </div>
             <div class="form__item">
                 <label class="form__label">E-mail*:</label>
-                <input type="text" class="form__input" :value="summary.email" v-bind:class="{_error: errs.email}">
+                <input type="text" class="form__input" v-model="summary.email" v-bind:class="{_error: errs.email}">
             </div>
             <div class="form__item left">
                 <label class="form__label">Телефон*:</label>
-                <input type="text" class="form__input" :value="summary.phone"  v-bind:class="{_error: errs.phone}">
+                <input type="text" class="form__input" v-model="summary.phone"  v-bind:class="{_error: errs.phone}">
             </div>
             <div class="form__item">
                 <label class="form__label">Дата рождения:</label>
-                <input type="text" class="form__input" :value="summary.bdate">
+                <input type="text" class="form__input" v-model="summary.bdate">
             </div>
             <div class="form__item left">
                 <label class="form__label">Желаемая Зарплата:</label>
-                <input type="text" class="form__input" :value="summary.paytion">
+                <input type="text" class="form__input" v-model="summary.paytion">
             </div>
             <div class="form__item">
                 <label class="form__label" style="z-index:1;">Образование:</label>
@@ -47,7 +47,7 @@
             <button class="btns" type="button" style="margin-left:0px;" @click="AddNewYear" v-if="isEdu()"> Ещё образование </button>
             <div class="form__item left">
                 <label class="form__label">Ключевые навыки:</label>
-                <textarea class="form__input" :value="summary.skills"></textarea>
+                <textarea class="form__input" v-model="summary.skills"></textarea>
             </div>
             <div class="eduall" v-if="isEdu()">
                 <div class="edu" v-for="ed in summary.edu" :key="ed.index">
@@ -57,22 +57,22 @@
                     </div>
                     <div class="form__item" style="width: 625px;">
                         <label  class="form__label" style="margin-left:228px;">Учебное заведение</label>
-                        <input type="text" name="paytion" class="form__input" :value="ed.name" list="Unics">
+                        <input type="text" name="paytion" class="form__input" v-model="ed.name" list="Unics">
                     </div>
 
                     <div class="form__item" style="width: 200px;">
                         <label  class="form__label">Факультет:</label>
-                        <input type="text" name="paytion" class="form__input" :value="ed.faculty">
+                        <input type="text" name="paytion" class="form__input" v-model="ed.faculty">
                     </div>
 
                     <div class="form__item left" style="width: 200px; margin-left:225px;">
                         <label  class="form__label">Профиль:</label>
-                        <input  type="text" name="paytion" class="form__input" :value="ed.profile">
+                        <input  type="text" name="paytion" class="form__input" v-model="ed.profile">
                     </div>
 
                     <div class="form__item left" style="width: 175px; margin-left: 450px">
                         <label class="form__label">Год окончания:</label>
-                        <input type="text" name="paytion" class="form__input" :value="ed.year">
+                        <input type="text" name="paytion" class="form__input" v-model="ed.year">
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
             </datalist>
             <div class="form__item" style="width:625px;">
                 <label class="form__label" >О себе:</label>
-                <textarea class="form__input" :value="summary.info"></textarea>
+                <textarea class="form__input" v-model="summary.info"></textarea>
             </div>
             <div class="form__item">
                 <label class="form__label _error" v-if="errs.total>0">Введены некоректные данные.</label>
@@ -158,11 +158,11 @@ export default {
   },
   async mounted(){
       await this.getCities();
-
-      if(this.$router.params.id != undefined){
-          let id = this.$router.params.id
-          const response = await response('http://localhost:5000/api/cv/'+id);
-            const sum = await response.json();
+        console.log(this.$router.currentRoute._value.params.id);
+      if(this.$router.currentRoute._value.params.id != undefined){
+          let id = this.$router.currentRoute._value.params.id
+          const response = await request('http://localhost:5000/api/cv/'+id);
+            const sum = response;
             this.summary.FIO = sum.name;
             this.summary.url = sum.foto;
             this.summary.city = sum.city;
@@ -250,7 +250,8 @@ export default {
           this.summary.education = opt;
       },
       SummarySubmit(){
-        this.validate();
+        //this.validate();
+        console.log("!")
         if (this.errs == 0){
             const sum = this.summary
             let data = {
