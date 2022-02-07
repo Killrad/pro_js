@@ -173,7 +173,7 @@ export default {
             this.summary.skills = sum.skills;
             this.summary.info = sum.info;
             this.summary.bdate = sum.bdate;
-            this.summary.education = sum.education;
+            this.summary.education = sum.edu;
             this.id = id;
       }
   },

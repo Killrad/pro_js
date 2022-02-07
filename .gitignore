@@ -23,3 +23,4 @@ pnpm-debug.log*
 *.sw?
 # API Token
 /src/assets/VK_Api.json
+*.rar
